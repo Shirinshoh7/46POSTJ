@@ -242,64 +242,120 @@
     .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
 
     /* ── MacBook Mockup ── */
-    .hero-visual { position: relative; }
-    .macbook {
-      position: relative; width: 100%; max-width: 580px; margin: 0 auto;
-      filter: drop-shadow(0 40px 80px rgba(0,0,0,.55));
+    .hero-visual { position: relative; display: flex; align-items: center; justify-content: center; }
+
+    /* Ambient glow */
+    .hero-visual::before {
+      content: ''; position: absolute;
+      width: 75%; height: 60%; top: 15%; left: 12%;
+      background: radial-gradient(ellipse, rgba(59,130,246,.28) 0%, rgba(99,102,241,.12) 45%, transparent 75%);
+      filter: blur(32px);
+      pointer-events: none; z-index: 0;
     }
-    /* Screen lid */
+
+    .macbook {
+      position: relative; width: 100%; max-width: 620px; margin: 0 auto;
+      z-index: 1;
+    }
+
+    /* Lid */
     .mac-lid {
       position: relative;
-      background: linear-gradient(160deg, #2a2a2e 0%, #1a1a1e 100%);
-      border-radius: 18px 18px 6px 6px;
-      padding: 14px 14px 10px;
-      border: 1.5px solid #3a3a3e;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+      background: linear-gradient(145deg, #3a3a3c 0%, #28282a 40%, #1c1c1e 100%);
+      border-radius: 20px 20px 4px 4px;
+      padding: 16px 16px 12px;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow:
+        0 0 0 1px rgba(0,0,0,.8),
+        0 2px 0 rgba(255,255,255,.06) inset,
+        0 60px 120px rgba(0,0,0,.7),
+        0 20px 40px rgba(0,0,0,.4);
     }
-    /* Camera notch */
+
+    /* Top shine line */
+    .mac-lid::before {
+      content: '';
+      position: absolute; top: 0; left: 8%; right: 8%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.18) 30%, rgba(255,255,255,.22) 50%, rgba(255,255,255,.18) 70%, transparent);
+      border-radius: 2px;
+    }
+
+    /* Camera */
     .mac-camera {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: #111; border: 1px solid #333;
-      margin: 0 auto 8px;
-      box-shadow: 0 0 0 2px rgba(255,255,255,.04);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px; width: fit-content;
     }
-    /* Screen bezel inner */
+    .mac-camera::before {
+      content: '';
+      width: 7px; height: 7px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #3a3a3c, #111);
+      border: 1px solid #444;
+      box-shadow: 0 0 0 1.5px #1a1a1a, 0 0 6px rgba(0,0,0,.8);
+      display: block;
+    }
+
+    /* Screen */
     .mac-screen {
-      border-radius: 8px;
+      border-radius: 6px;
       overflow: hidden;
       background: #000;
       line-height: 0;
-      border: 1px solid #111;
+      box-shadow: 0 0 0 1px #000, inset 0 0 0 1px rgba(255,255,255,.04);
+      position: relative;
     }
-    .mac-screen img { width: 100%; height: auto; display: block; }
-    /* Bottom base / hinge */
+    .mac-screen::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,.04) 0%, transparent 50%);
+      pointer-events: none; z-index: 2;
+      border-radius: 6px;
+    }
+    .mac-screen img { width: 100%; height: auto; display: block; position: relative; z-index: 1; }
+
+    /* Hinge strip */
+    .mac-hinge {
+      height: 5px;
+      background: linear-gradient(180deg, #1a1a1c 0%, #222224 100%);
+      border-left: 1px solid rgba(0,0,0,.9);
+      border-right: 1px solid rgba(0,0,0,.9);
+      margin: 0 2px;
+    }
+
+    /* Bottom base */
     .mac-base {
       position: relative;
-      height: 22px;
-      background: linear-gradient(180deg, #cecece 0%, #b0b0b0 50%, #a0a0a0 100%);
-      border-radius: 0 0 10px 10px;
-      margin-top: -1px;
+      height: 28px;
+      background: linear-gradient(180deg,
+        #e8e8e8 0%, #d4d4d4 30%, #c0c0c0 60%, #b0b0b0 100%);
+      border-radius: 0 0 14px 14px;
+      margin: 0 0;
+      box-shadow: 0 8px 24px rgba(0,0,0,.5), 0 2px 6px rgba(0,0,0,.3);
+      border: 1px solid rgba(0,0,0,.25);
+      border-top: none;
     }
+    /* Notch cutout */
     .mac-base::before {
       content: '';
       position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-      width: 18%; height: 5px;
-      background: linear-gradient(180deg, #999 0%, #bbb 100%);
-      border-radius: 0 0 6px 6px;
+      width: 22%; height: 6px;
+      background: linear-gradient(180deg, #aaa 0%, #bbb 100%);
+      border-radius: 0 0 8px 8px;
+      box-shadow: inset 0 -1px 2px rgba(0,0,0,.2);
     }
+    /* Base shine */
     .mac-base::after {
       content: '';
-      position: absolute; bottom: -2px; left: 5%; right: 5%;
-      height: 3px;
-      background: linear-gradient(90deg, transparent, rgba(0,0,0,.18) 20%, rgba(0,0,0,.22) 80%, transparent);
-      border-radius: 0 0 6px 6px;
+      position: absolute; top: 4px; left: 6%; right: 6%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.6) 30%, rgba(255,255,255,.7) 50%, rgba(255,255,255,.6) 70%, transparent);
     }
-    /* Glow behind screen */
-    .hero-visual::before {
-      content: ''; position: absolute;
-      top: 10%; left: 10%; right: 10%; bottom: 20%;
-      background: radial-gradient(ellipse at 50% 40%, rgba(59,130,246,.22) 0%, transparent 70%);
-      pointer-events: none; z-index: -1;
+
+    /* Feet shadow */
+    .mac-feet {
+      height: 3px;
+      margin: 0 4%;
+      background: linear-gradient(90deg, transparent 2%, rgba(0,0,0,.35) 20%, rgba(0,0,0,.4) 50%, rgba(0,0,0,.35) 80%, transparent 98%);
+      filter: blur(3px);
+      border-radius: 50%;
     }
     .hero-visual::before {
       content: '';
@@ -855,7 +911,9 @@
             <img src="https://raw.githubusercontent.com/Shirinshoh7/46POSTJ/main/Kassa.png" alt="Интерфейс кассовой программы 46POS" />
           </div>
         </div>
+        <div class="mac-hinge"></div>
         <div class="mac-base"></div>
+        <div class="mac-feet"></div>
       </div>
     </div>
   </div>
