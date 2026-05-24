@@ -1,0 +1,1352 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="46POS — современная система автоматизации для розничных магазинов в Таджикистане. Касса, склад, отчёты. Работает без интернета. Душанбе, Худжанд, Куляб, Бохтар." />
+  <meta name="keywords" content="касса Таджикистан, программа для магазина Таджикистан, автоматизация торговли Таджикистан, POS система Таджикистан, кассовая программа Душанбе, учёт товаров Таджикистан, программа для магазина Душанбе, касса Душанбе, 46POS, склад программа Таджикистан, касса Худжанд, автоматизация магазин Таджикистан" />
+  <title>46POS — Автоматизация торговли в Таджикистане | Касса для магазина</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    /* ── Reset & base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary:   #103B67;
+      --accent:    #3B82F6;
+      --accent-h:  #2563EB;
+      --accent-l:  #60A5FA;
+      --bg:        #0F172A;
+      --bg2:       #0B1629;
+      --card:      #1E293B;
+      --card-h:    #243347;
+      --border:    #2E4060;
+      --border-l:  #334155;
+      --text:      #F1F5F9;
+      --text-2:    #CBD5E1;
+      --muted:     #8899AA;
+      --success:   #22C55E;
+      --warn:      #F59E0B;
+      --radius:    14px;
+      --radius-lg: 22px;
+      --ease-out:  cubic-bezier(.16,1,.3,1);
+      --ease-in:   cubic-bezier(.4,0,1,1);
+      --ease:      cubic-bezier(.4,0,.2,1);
+    }
+    html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    img, svg { display: block; }
+    a { text-decoration: none; color: inherit; }
+    button { font-family: inherit; cursor: pointer; border: none; background: none; }
+
+    /* ── Layout helpers ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+    .section    { padding: 100px 0; }
+    .text-center{ text-align: center; }
+    .sr-only    { position: absolute; width:1px; height:1px; padding:0; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    /* ── Tag / pill ── */
+    .tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.22);
+      color: var(--accent-l); font-size: 12.5px; font-weight: 600;
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 22px;
+      letter-spacing: .03em;
+    }
+
+    /* ── Section titles ── */
+    .section-title {
+      font-size: clamp(28px, 3.8vw, 44px); font-weight: 800;
+      line-height: 1.12; letter-spacing: -.02em; margin-bottom: 16px;
+    }
+    .section-sub {
+      font-size: 16.5px; color: var(--text-2); max-width: 560px;
+      margin: 0 auto 56px; line-height: 1.75;
+    }
+
+    /* ── Buttons ── */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 8px; padding: 14px 26px; border-radius: 11px;
+      font-size: 15px; font-weight: 600; line-height: 1;
+      transition: transform .18s var(--ease-out), box-shadow .18s var(--ease-out), background .15s var(--ease);
+      white-space: nowrap; min-height: 48px;
+    }
+    .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+    .btn-primary {
+      background: var(--accent); color: #fff;
+      box-shadow: 0 4px 20px rgba(59,130,246,.32);
+    }
+    .btn-primary:hover {
+      background: var(--accent-h); transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(59,130,246,.42);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      background: rgba(255,255,255,.06); color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,.1); transform: translateY(-1px); border-color: var(--border-l); }
+    .btn-ghost {
+      background: transparent; color: #fff;
+      border: 2px solid rgba(255,255,255,.35);
+    }
+    .btn-ghost:hover { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.6); }
+    .btn-sm { padding: 10px 18px; font-size: 14px; min-height: 40px; }
+    .nav-icon-btn {
+      display: flex; align-items: center; justify-content: center;
+      width: 38px; height: 38px; border-radius: 10px;
+      background: var(--card); border: 1px solid var(--border);
+      transition: background .2s, border-color .2s, transform .2s;
+      flex-shrink: 0;
+    }
+    .nav-icon-btn:hover { background: var(--card-h); border-color: var(--border-l); transform: translateY(-2px); }
+
+    /* ──────────────────────────────
+       NAVBAR
+    ────────────────────────────── */
+    #navbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      height: 68px; padding: 0 24px;
+      display: flex; align-items: center;
+      transition: background .3s, backdrop-filter .3s, box-shadow .3s;
+    }
+    #navbar.scrolled {
+      background: rgba(11,22,41,.9);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
+      box-shadow: 0 1px 0 rgba(255,255,255,.05), 0 8px 40px rgba(0,0,0,.4);
+    }
+    .nav-inner {
+      max-width: 1200px; width: 100%; margin: 0 auto;
+      display: flex; align-items: center; justify-content: space-between; gap: 24px;
+    }
+    .nav-logo {
+      font-size: 21px; font-weight: 900; letter-spacing: -.03em; color: #fff;
+      display: flex; align-items: center; gap: 2px;
+    }
+    .nav-logo span { color: var(--accent); }
+    .nav-links { display: flex; align-items: center; gap: 2px; list-style: none; }
+    .nav-links a {
+      color: var(--text-2); font-size: 14px; font-weight: 500;
+      padding: 8px 13px; border-radius: 8px;
+      transition: color .15s, background .15s;
+    }
+    .nav-links a:hover { color: var(--text); background: rgba(255,255,255,.06); }
+    .nav-actions { display: flex; align-items: center; gap: 10px; }
+    .hamburger {
+      display: none; align-items: center; justify-content: center;
+      width: 40px; height: 40px; padding: 8px; border-radius: 8px;
+      flex-direction: column; gap: 5px;
+      transition: background .15s;
+    }
+    .hamburger:hover { background: rgba(255,255,255,.07); }
+    .hamburger span {
+      display: block; width: 20px; height: 2px;
+      background: var(--text); border-radius: 2px; transition: all .25s var(--ease);
+    }
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+    .mobile-menu {
+      display: none; position: fixed; top: 68px; left: 0; right: 0;
+      background: rgba(11,22,41,.97); backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      flex-direction: column; padding: 12px 20px 20px; gap: 4px;
+      z-index: 999;
+    }
+    .mobile-menu.open { display: flex; }
+    .mobile-menu a {
+      color: var(--text-2); font-size: 15px; font-weight: 500;
+      padding: 13px 14px; border-radius: 9px; transition: all .15s;
+    }
+    .mobile-menu a:hover { color: var(--text); background: rgba(255,255,255,.06); }
+    .mobile-menu .btn { width: 100%; margin-top: 6px; }
+
+    /* ──────────────────────────────
+       HERO
+    ────────────────────────────── */
+    #hero {
+      min-height: 100vh; display: flex; align-items: center;
+      padding: 116px 24px 80px;
+      background:
+        radial-gradient(ellipse 100% 70% at 50% -15%, rgba(16,59,103,.9) 0%, transparent 65%),
+        radial-gradient(ellipse 50% 50% at 85% 50%, rgba(59,130,246,.1) 0%, transparent 65%);
+      position: relative; overflow: hidden;
+    }
+    /* Dot grid */
+    #hero::before {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 28px 28px;
+      mask-image: radial-gradient(ellipse 80% 80% at 50% 40%, black 30%, transparent 80%);
+    }
+    /* Glow lines */
+    #hero::after {
+      content: '';
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 120px;
+      background: linear-gradient(to bottom, rgba(59,130,246,.6), transparent);
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 56px; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.18);
+      color: var(--accent-l); font-size: 12.5px; font-weight: 600;
+      padding: 6px 14px; border-radius: 100px; margin-bottom: 26px;
+    }
+    .hero-flag { font-size: 14px; }
+    .hero-title {
+      font-size: clamp(34px, 5vw, 60px); font-weight: 900;
+      line-height: 1.06; letter-spacing: -.025em;
+      color: #fff; margin-bottom: 24px;
+    }
+    .hero-title .accent-line {
+      background: linear-gradient(90deg, var(--accent) 0%, #60A5FA 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-sub {
+      font-size: 16.5px; color: var(--text-2); line-height: 1.75;
+      margin-bottom: 32px; max-width: 460px;
+    }
+    .hero-badges {
+      display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px;
+    }
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: 13px; font-weight: 500; color: var(--text-2);
+      background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09);
+      padding: 7px 13px; border-radius: 9px;
+    }
+    .badge-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--success);
+      box-shadow: 0 0 6px rgba(34,197,94,.5); flex-shrink: 0;
+    }
+    .hero-cta { display: flex; flex-wrap: wrap; gap: 12px; }
+
+    /* ── MacBook Mockup ── */
+    .hero-visual { position: relative; }
+    .macbook {
+      position: relative; width: 100%; max-width: 580px; margin: 0 auto;
+      filter: drop-shadow(0 40px 80px rgba(0,0,0,.55));
+    }
+    /* Screen lid */
+    .mac-lid {
+      position: relative;
+      background: linear-gradient(160deg, #2a2a2e 0%, #1a1a1e 100%);
+      border-radius: 18px 18px 6px 6px;
+      padding: 14px 14px 10px;
+      border: 1.5px solid #3a3a3e;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    /* Camera notch */
+    .mac-camera {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: #111; border: 1px solid #333;
+      margin: 0 auto 8px;
+      box-shadow: 0 0 0 2px rgba(255,255,255,.04);
+    }
+    /* Screen bezel inner */
+    .mac-screen {
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+      line-height: 0;
+      border: 1px solid #111;
+    }
+    .mac-screen img { width: 100%; height: auto; display: block; }
+    /* Bottom base / hinge */
+    .mac-base {
+      position: relative;
+      height: 22px;
+      background: linear-gradient(180deg, #cecece 0%, #b0b0b0 50%, #a0a0a0 100%);
+      border-radius: 0 0 10px 10px;
+      margin-top: -1px;
+    }
+    .mac-base::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 18%; height: 5px;
+      background: linear-gradient(180deg, #999 0%, #bbb 100%);
+      border-radius: 0 0 6px 6px;
+    }
+    .mac-base::after {
+      content: '';
+      position: absolute; bottom: -2px; left: 5%; right: 5%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(0,0,0,.18) 20%, rgba(0,0,0,.22) 80%, transparent);
+      border-radius: 0 0 6px 6px;
+    }
+    /* Glow behind screen */
+    .hero-visual::before {
+      content: ''; position: absolute;
+      top: 10%; left: 10%; right: 10%; bottom: 20%;
+      background: radial-gradient(ellipse at 50% 40%, rgba(59,130,246,.22) 0%, transparent 70%);
+      pointer-events: none; z-index: -1;
+    }
+    .hero-visual::before {
+      content: '';
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 480px; height: 360px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.18) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pos-window {
+      width: 100%; max-width: 530px; margin: 0 auto;
+      background: #111D2E; border: 1px solid var(--border);
+      border-radius: 18px; overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,.04),
+        0 24px 80px rgba(0,0,0,.65),
+        inset 0 1px 0 rgba(255,255,255,.06);
+    }
+    .pw-titlebar {
+      display: flex; align-items: center; gap: 7px;
+      padding: 13px 18px; border-bottom: 1px solid rgba(46,64,96,.7);
+      background: rgba(0,0,0,.25);
+    }
+    .tw-dot { width: 11px; height: 11px; border-radius: 50%; }
+    .tw-r { background: #FF5F57; } .tw-y { background: #FEBC2E; } .tw-g { background: #28C840; }
+    .pw-title { margin: 0 auto; font-size: 11.5px; font-weight: 600; color: var(--muted); letter-spacing: .05em; }
+    .pw-body { display: flex; height: 336px; }
+
+    /* Sidebar */
+    .pw-sidebar {
+      width: 50px; background: rgba(0,0,0,.2); border-right: 1px solid rgba(46,64,96,.5);
+      display: flex; flex-direction: column; align-items: center; padding: 10px 0; gap: 2px;
+    }
+    .si {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+    }
+    .si:hover, .si.active { background: rgba(59,130,246,.2); }
+    .si svg { width: 18px; height: 18px; stroke: var(--muted); }
+    .si.active svg { stroke: var(--accent-l); }
+    .si-spacer { flex: 1; }
+
+    /* Main area */
+    .pw-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+    .pw-header {
+      padding: 11px 16px; border-bottom: 1px solid rgba(46,64,96,.5);
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(0,0,0,.1);
+    }
+    .pw-htitle { font-size: 13px; font-weight: 700; }
+    .pw-status {
+      display: flex; align-items: center; gap: 5px;
+      font-size: 11.5px; font-weight: 600; color: #4ade80;
+    }
+    .pw-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--success); animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.4; } }
+    .pw-search {
+      margin: 10px 14px;
+      background: rgba(0,0,0,.3); border: 1px solid rgba(46,64,96,.6);
+      border-radius: 9px; padding: 8px 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .pw-search svg { width: 13px; height: 13px; stroke: var(--muted); flex-shrink: 0; }
+    .pw-search-txt { font-size: 12px; color: var(--muted); }
+    .pw-items { flex: 1; overflow: hidden; padding: 0 14px; }
+    .pw-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 9px 0; border-bottom: 1px solid rgba(46,64,96,.35);
+    }
+    .pw-item:last-child { border-bottom: none; }
+    .pw-item-l { display: flex; align-items: center; gap: 10px; }
+    .pw-ico {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(59,130,246,.12); display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0; font-size: 14px;
+    }
+    .pw-iname { font-size: 12px; font-weight: 600; }
+    .pw-icat  { font-size: 11px; color: var(--muted); }
+    .pw-item-r { text-align: right; }
+    .pw-price { font-size: 13px; font-weight: 700; color: var(--accent-l); }
+    .pw-qty { display: flex; align-items: center; gap: 5px; justify-content: flex-end; margin-top: 4px; }
+    .pw-qbtn {
+      width: 20px; height: 20px; border-radius: 5px;
+      background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.1);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: 700; color: var(--muted); line-height: 1;
+    }
+    .pw-qval { font-size: 12px; font-weight: 600; width: 14px; text-align: center; }
+    .pw-footer {
+      padding: 12px 14px; border-top: 1px solid rgba(46,64,96,.5);
+      background: rgba(0,0,0,.2);
+    }
+    .pw-total { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .pw-tlbl  { font-size: 11.5px; color: var(--muted); }
+    .pw-tval  { font-size: 18px; font-weight: 900; letter-spacing: -.02em; }
+    .pw-paybtn {
+      width: 100%; background: var(--accent); color: #fff;
+      border-radius: 9px; padding: 9px 16px;
+      font-size: 13px; font-weight: 700; display: flex;
+      align-items: center; justify-content: center; gap: 6px; cursor: pointer;
+      border: none; transition: background .15s;
+    }
+    .pw-paybtn:hover { background: var(--accent-h); }
+
+    /* Stats panel */
+    .pw-stats {
+      width: 96px; flex-shrink: 0; border-left: 1px solid rgba(46,64,96,.5);
+      padding: 10px 9px; display: flex; flex-direction: column; gap: 8px;
+    }
+    .stat-c {
+      background: rgba(0,0,0,.3); border: 1px solid rgba(46,64,96,.4);
+      border-radius: 9px; padding: 9px 10px;
+    }
+    .stat-lbl { font-size: 9px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 600; }
+    .stat-num { font-size: 16px; font-weight: 800; line-height: 1.1; margin: 3px 0 2px; }
+    .stat-chg { font-size: 10px; font-weight: 700; }
+    .up   { color: #4ade80; }
+    .down { color: #fb923c; }
+    .mini-chart {
+      display: flex; align-items: flex-end; gap: 2px; height: 24px; margin-top: 7px;
+    }
+    .mc-bar { flex: 1; border-radius: 2px; background: rgba(59,130,246,.35); }
+    .mc-bar.hi { background: var(--accent); }
+
+    /* ──────────────────────────────
+       FOR WHO
+    ────────────────────────────── */
+    #for-who { padding: 80px 0; }
+    .who-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px;
+    }
+    .who-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 28px 16px;
+      text-align: center; cursor: default;
+      transition: border-color .2s var(--ease-out), transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
+    }
+    .who-card:hover {
+      border-color: rgba(59,130,246,.5); transform: translateY(-5px);
+      box-shadow: 0 16px 48px rgba(0,0,0,.3), 0 0 0 1px rgba(59,130,246,.12);
+    }
+    .who-icon {
+      width: 64px; height: 64px; border-radius: 18px; margin: 0 auto 16px;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(135deg, rgba(59,130,246,.18) 0%, rgba(99,102,241,.18) 100%);
+      border: 1px solid rgba(59,130,246,.25);
+    }
+    .who-icon svg { width: 30px; height: 30px; stroke: var(--accent-l); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+    .who-icon.ic-green  { background: linear-gradient(135deg,rgba(34,197,94,.15),rgba(16,185,129,.15)); border-color: rgba(34,197,94,.25); }
+    .who-icon.ic-green  svg { stroke: #4ade80; }
+    .who-icon.ic-violet { background: linear-gradient(135deg,rgba(139,92,246,.18),rgba(99,102,241,.18)); border-color: rgba(139,92,246,.3); }
+    .who-icon.ic-violet svg { stroke: #a78bfa; }
+    .who-icon.ic-rose   { background: linear-gradient(135deg,rgba(244,63,94,.15),rgba(251,113,133,.12)); border-color: rgba(244,63,94,.25); }
+    .who-icon.ic-rose   svg { stroke: #fb7185; }
+    .who-icon.ic-amber  { background: linear-gradient(135deg,rgba(245,158,11,.15),rgba(251,191,36,.12)); border-color: rgba(245,158,11,.25); }
+    .who-icon.ic-amber  svg { stroke: #fbbf24; }
+    .who-label { font-size: 13.5px; font-weight: 600; color: var(--text-2); line-height: 1.4; }
+
+    /* ──────────────────────────────
+       FEATURES
+    ────────────────────────────── */
+    #features { background: var(--bg2); }
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 30px 28px;
+      position: relative; overflow: hidden;
+      transition: border-color .25s var(--ease-out), transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
+    }
+    .feat-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(59,130,246,.4), transparent);
+      opacity: 0; transition: opacity .25s;
+    }
+    .feat-card:hover { border-color: rgba(59,130,246,.3); transform: translateY(-3px); box-shadow: 0 20px 56px rgba(0,0,0,.35); }
+    .feat-card:hover::before { opacity: 1; }
+    .feat-icon-wrap {
+      width: 52px; height: 52px; border-radius: 13px;
+      background: rgba(59,130,246,.1); border: 1px solid rgba(59,130,246,.15);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .feat-icon-wrap svg { width: 24px; height: 24px; stroke: var(--accent-l); stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .feat-title { font-size: 16.5px; font-weight: 700; margin-bottom: 9px; }
+    .feat-desc  { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /* ──────────────────────────────
+       ADVANTAGES
+    ────────────────────────────── */
+    #advantages { background: var(--bg); }
+    .adv-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    .adv-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 34px 30px;
+      transition: border-color .25s var(--ease-out), transform .25s var(--ease-out);
+    }
+    .adv-card:hover { border-color: rgba(59,130,246,.3); transform: translateY(-3px); }
+    .adv-icon-wrap {
+      width: 56px; height: 56px; border-radius: 15px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+    .adv-icon-wrap svg { width: 26px; height: 26px; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .ic-blue  { background: rgba(59,130,246,.12); border: 1px solid rgba(59,130,246,.18); }
+    .ic-blue  svg { stroke: var(--accent-l); }
+    .ic-green { background: rgba(34,197,94,.1);  border: 1px solid rgba(34,197,94,.18); }
+    .ic-green svg { stroke: #4ade80; }
+    .ic-amber { background: rgba(245,158,11,.1);  border: 1px solid rgba(245,158,11,.18); }
+    .ic-amber svg { stroke: #FCD34D; }
+    .ic-purple{ background: rgba(139,92,246,.1);  border: 1px solid rgba(139,92,246,.18); }
+    .ic-purple svg { stroke: #A78BFA; }
+    .ic-indigo{ background: rgba(99,102,241,.1);  border: 1px solid rgba(99,102,241,.18); }
+    .ic-indigo svg { stroke: #818CF8; }
+    .ic-teal  { background: rgba(20,184,166,.1);  border: 1px solid rgba(20,184,166,.18); }
+    .ic-teal  svg { stroke: #2DD4BF; }
+    .adv-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .adv-desc  { font-size: 14px; color: var(--text-2); line-height: 1.65; }
+
+    /* ──────────────────────────────
+       HOW TO START
+    ────────────────────────────── */
+    #how { background: var(--bg2); }
+    .steps-wrapper { position: relative; }
+    .steps-line {
+      position: absolute; top: 40px; left: calc(16.67% + 20px); right: calc(16.67% + 20px);
+      height: 2px;
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(59,130,246,.2) 100%);
+      pointer-events: none;
+    }
+    .steps-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .step { text-align: center; }
+    .step-num {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; font-weight: 900; color: #fff;
+      margin: 0 auto 24px; position: relative; z-index: 1;
+      box-shadow: 0 8px 32px rgba(59,130,246,.32);
+    }
+    .step-title { font-size: 18.5px; font-weight: 700; margin-bottom: 11px; }
+    .step-desc  { font-size: 14px; color: var(--text-2); line-height: 1.65; max-width: 280px; margin: 0 auto; }
+
+    /* ──────────────────────────────
+       PRICING
+    ────────────────────────────── */
+    #pricing { background: var(--bg); }
+    .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .price-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 38px 30px;
+      position: relative; display: flex; flex-direction: column;
+      transition: transform .25s var(--ease-out), box-shadow .25s var(--ease-out);
+    }
+    .price-card:hover { transform: translateY(-4px); box-shadow: 0 28px 64px rgba(0,0,0,.4); }
+    .price-card.featured {
+      border-color: var(--accent);
+      background: linear-gradient(160deg, rgba(59,130,246,.07) 0%, var(--card) 50%);
+      box-shadow: 0 0 0 1px rgba(59,130,246,.25), 0 20px 60px rgba(59,130,246,.12);
+    }
+    .featured-tag {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: linear-gradient(90deg, var(--accent), #60A5FA);
+      color: #fff; font-size: 12px; font-weight: 700;
+      padding: 5px 18px; border-radius: 100px; white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(59,130,246,.4);
+    }
+    .price-tier  { font-size: 11.5px; font-weight: 700; color: var(--accent-l); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 8px; }
+    .price-name  { font-size: 26px; font-weight: 800; letter-spacing: -.02em; margin-bottom: 5px; }
+    .price-seats { font-size: 13.5px; color: var(--muted); margin-bottom: 28px; }
+    .price-list  { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 32px; flex: 1; }
+    .price-list li {
+      display: flex; align-items: flex-start; gap: 10px;
+      font-size: 14px; color: var(--text-2);
+    }
+    .price-list li::before {
+      content: ''; flex-shrink: 0; margin-top: 4px;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: rgba(34,197,94,.12); border: 1px solid rgba(34,197,94,.25);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='M3.5 8l3 3 6-6' stroke='%234ade80' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    }
+    .price-cta { display: block; text-align: center; }
+    .price-note { font-size: 12.5px; color: var(--muted); text-align: center; margin-top: 12px; }
+
+    /* ──────────────────────────────
+       DEMO BANNER
+    ────────────────────────────── */
+    #demo-banner {
+      position: relative; overflow: hidden; padding: 100px 24px;
+      background: linear-gradient(135deg, #0D2E55 0%, #1552A0 50%, #0F3A7A 100%);
+    }
+    #demo-banner::before {
+      content: '';
+      position: absolute; top: -160px; left: 50%; transform: translateX(-50%);
+      width: 800px; height: 640px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.3) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    #demo-banner::after {
+      content: '';
+      position: absolute; inset: 0; pointer-events: none;
+      background-image: radial-gradient(rgba(255,255,255,.04) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+    .demo-inner { position: relative; z-index: 1; text-align: center; max-width: 680px; margin: 0 auto; }
+    .demo-icon {
+      width: 72px; height: 72px; border-radius: 20px;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 28px;
+    }
+    .demo-icon svg { width: 34px; height: 34px; stroke: #fff; stroke-width: 1.75; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .demo-title { font-size: clamp(28px,4vw,48px); font-weight: 900; color: #fff; line-height: 1.1; margin-bottom: 16px; }
+    .demo-sub   { font-size: 16.5px; color: rgba(255,255,255,.72); margin-bottom: 40px; }
+    .demo-cta {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: #fff; color: #0D2E55;
+      font-size: 16px; font-weight: 700; padding: 16px 40px;
+      border-radius: 12px; transition: all .2s var(--ease-out);
+      box-shadow: 0 8px 32px rgba(0,0,0,.22);
+      min-height: 56px;
+    }
+    .demo-cta:hover { transform: translateY(-2px); box-shadow: 0 14px 48px rgba(0,0,0,.32); }
+    .demo-cta:active { transform: translateY(0); }
+    .demo-cta svg { width: 20px; height: 20px; stroke: #0D2E55; stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* ──────────────────────────────
+       FAQ
+    ────────────────────────────── */
+    #faq { background: var(--bg2); }
+    .faq-wrap { max-width: 760px; margin: 0 auto; }
+    .faq-item {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: var(--radius); margin-bottom: 10px; overflow: hidden;
+      transition: border-color .2s var(--ease);
+    }
+    .faq-item:last-child { margin-bottom: 0; }
+    .faq-item.open { border-color: rgba(59,130,246,.32); }
+    .faq-q {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 24px; cursor: pointer; gap: 16px; user-select: none;
+      font-size: 15px; font-weight: 600; transition: background .15s;
+    }
+    .faq-q:hover { background: rgba(255,255,255,.025); }
+    .faq-q:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+    .faq-toggle {
+      flex-shrink: 0; width: 30px; height: 30px; border-radius: 8px;
+      background: rgba(59,130,246,.1); display: flex; align-items: center; justify-content: center;
+      transition: background .2s, transform .3s var(--ease);
+    }
+    .faq-toggle svg { width: 16px; height: 16px; stroke: var(--accent-l); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .faq-item.open .faq-toggle { background: var(--accent); transform: rotate(45deg); }
+    .faq-item.open .faq-toggle svg { stroke: #fff; }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      transition: max-height .4s var(--ease-out), padding .3s var(--ease);
+      font-size: 14.5px; color: var(--text-2); line-height: 1.75;
+      padding: 0 24px;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+
+    /* ──────────────────────────────
+       CONTACTS / CTA
+    ────────────────────────────── */
+    #contacts { background: var(--bg); }
+    .cta-box {
+      background: linear-gradient(160deg, rgba(16,59,103,.35) 0%, var(--card) 50%);
+      border: 1px solid var(--border); border-radius: 24px;
+      padding: 72px 48px; text-align: center;
+      position: relative; overflow: hidden;
+    }
+    .cta-box::before {
+      content: '';
+      position: absolute; top: -80px; left: 50%; transform: translateX(-50%);
+      width: 500px; height: 300px;
+      background: radial-gradient(ellipse, rgba(59,130,246,.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .cta-inner { position: relative; z-index: 1; }
+    .cta-title  { font-size: clamp(26px, 3.8vw, 44px); font-weight: 800; letter-spacing: -.02em; margin-bottom: 14px; }
+    .cta-sub    { font-size: 16.5px; color: var(--text-2); margin-bottom: 48px; }
+    .cta-grid   { display: flex; flex-wrap: wrap; justify-content: center; gap: 14px; }
+    .cta-btn {
+      display: flex; align-items: center; gap: 14px;
+      background: rgba(255,255,255,.04); border: 1px solid var(--border);
+      border-radius: 13px; padding: 16px 24px; min-width: 210px;
+      transition: all .2s var(--ease-out);
+    }
+    .cta-btn:hover { border-color: rgba(59,130,246,.4); transform: translateY(-2px); background: rgba(59,130,246,.06); }
+    .cta-btn-icon {
+      width: 42px; height: 42px; border-radius: 11px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cta-btn-icon svg { width: 22px; height: 22px; fill: none; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+    .cta-btn-body { text-align: left; }
+    .cta-btn-lbl { font-size: 11px; color: var(--muted); font-weight: 500; letter-spacing: .06em; text-transform: uppercase; }
+    .cta-btn-val { font-size: 15px; font-weight: 600; }
+
+    /* ──────────────────────────────
+       FOOTER
+    ────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 30px 24px; background: rgba(0,0,0,.2);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: flex; flex-wrap: wrap;
+      align-items: center; justify-content: space-between; gap: 14px;
+    }
+    .footer-logo { font-size: 16px; font-weight: 800; letter-spacing: -.02em; }
+    .footer-logo span { color: var(--accent); }
+    .footer-copy { font-size: 13px; color: var(--muted); }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 18px; }
+    .footer-links a { font-size: 13px; color: var(--muted); transition: color .15s; }
+    .footer-links a:hover { color: var(--text); }
+
+    /* ──────────────────────────────
+       SCROLL ANIMATIONS
+    ────────────────────────────── */
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .65s var(--ease-out), transform .65s var(--ease-out);
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: .08s; }
+    .d2 { transition-delay: .16s; }
+    .d3 { transition-delay: .24s; }
+    .d4 { transition-delay: .32s; }
+    .d5 { transition-delay: .40s; }
+    .d6 { transition-delay: .48s; }
+    .d7 { transition-delay: .56s; }
+    .d8 { transition-delay: .64s; }
+    .d9 { transition-delay: .72s; }
+
+    /* ──────────────────────────────
+       RESPONSIVE
+    ────────────────────────────── */
+    @media (max-width: 1100px) {
+      .hero-inner { gap: 40px; }
+      .who-grid  { grid-template-columns: repeat(3, 1fr); }
+      .feat-grid { grid-template-columns: repeat(2, 1fr); }
+      .adv-grid  { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 900px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-visual { order: -1; }
+      .pos-window { max-width: 420px; }
+      .pw-stats { display: none; }
+    }
+    @media (max-width: 768px) {
+      .section { padding: 72px 0; }
+      .nav-links, .nav-actions .btn:not(.btn-primary) { display: none; }
+      .hamburger { display: flex; }
+      .nav-actions .btn-primary { display: none; }
+      .who-grid     { grid-template-columns: repeat(2, 1fr); }
+      .feat-grid    { grid-template-columns: 1fr; }
+      .adv-grid     { grid-template-columns: 1fr; }
+      .steps-grid   { grid-template-columns: 1fr; gap: 32px; }
+      .steps-line   { display: none; }
+      .pricing-grid { grid-template-columns: 1fr; max-width: 400px; margin: 0 auto; }
+      .cta-box      { padding: 44px 22px; }
+      .section-sub  { margin-bottom: 40px; }
+    }
+    @media (max-width: 480px) {
+      .hero-cta { flex-direction: column; }
+      .hero-cta .btn { width: 100%; justify-content: center; }
+      .hero-badges .badge:last-child { display: none; }
+      .who-grid { grid-template-columns: repeat(2, 1fr); }
+      .cta-btn  { width: 100%; }
+    }
+
+    /* Reduced motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════ NAVBAR ══════════════════════════ -->
+<nav id="navbar" role="navigation" aria-label="Основная навигация">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo" aria-label="46POS — главная" style="display:flex;align-items:center;gap:8px;"><img src="logo.png" alt="" style="height:36px;width:36px;display:block;border-radius:50%;object-fit:cover;" />46<span>POS</span></a>
+    <ul class="nav-links" role="list">
+      <li><a href="#features">Возможности</a></li>
+      <li><a href="#advantages">Преимущества</a></li>
+      <li><a href="#pricing">Цены</a></li>
+      <li><a href="#faq">FAQ</a></li>
+    </ul>
+    <div class="nav-actions">
+      <a href="https://t.me/shirinshoh" target="_blank" rel="noopener" class="nav-icon-btn" aria-label="Написать в Telegram">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-16.5 7.5a2.25 2.25 0 0 0 .126 4.073l3.9 1.205 1.498 4.873a1.125 1.125 0 0 0 1.768.5l2.045-1.834 3.959 2.981a2.25 2.25 0 0 0 3.498-1.306l3-13.5a2.25 2.25 0 0 0-2.272-2.707z" fill="#229ED9"/></svg>
+      </a>
+      <a href="https://wa.me/77072442497" target="_blank" rel="noopener" class="nav-icon-btn" aria-label="Написать в WhatsApp">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z" fill="#25D366"/></svg>
+      </a>
+      <a href="https://46posdemo.netlify.app/" class="btn btn-primary btn-sm" aria-label="Открыть веб-демо 46POS">Попробовать бесплатно</a>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Открыть меню" aria-expanded="false" aria-controls="mobile-menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Мобильное меню">
+  <a href="#features">Возможности</a>
+  <a href="#advantages">Преимущества</a>
+  <a href="#pricing">Цены</a>
+  <a href="#faq">FAQ</a>
+  <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="btn btn-secondary">Telegram</a>
+  <a href="https://46posdemo.netlify.app/" class="btn btn-primary">Попробовать бесплатно</a>
+</div>
+
+<!-- ══════════════════════════ HERO ══════════════════════════ -->
+<section id="hero" aria-labelledby="hero-heading">
+  <div class="hero-inner">
+    <div>
+      <h1 id="hero-heading" class="hero-title">
+        Автоматизируйте<br>свой бизнес<br><span class="accent-line">за 1 день</span>
+      </h1>
+      <p class="hero-sub">Касса, склад, товары, отчёты и финансы в одной программе. Работает без интернета. Настроим и обучим персонал.</p>
+      <div class="hero-badges" aria-label="Ключевые преимущества">
+        <span class="badge"><span class="badge-dot" aria-hidden="true"></span>Настройка за 1 день</span>
+        <span class="badge"><span class="badge-dot" aria-hidden="true"></span>Работает без интернета</span>
+        <span class="badge"><span class="badge-dot" aria-hidden="true"></span>Поддержка на таджикском</span>
+      </div>
+      <div class="hero-cta">
+        <a href="https://46posdemo.netlify.app/" class="btn btn-primary" style="font-size:16px;padding:16px 32px;" aria-label="Открыть веб-демо 46POS">
+          Открыть демо
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="btn btn-secondary" style="font-size:16px;padding:16px 32px;" aria-label="Написать в Telegram / WhatsApp @shirinshosh">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+          Telegram
+        </a>
+        <a href="https://wa.me/77072442497" target="_blank" rel="noopener" class="btn" style="font-size:16px;padding:16px 32px;background:linear-gradient(135deg,#22c55e,#16a34a);color:#fff;border-radius:var(--radius);" aria-label="Написать в WhatsApp">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+          WhatsApp
+        </a>
+      </div>
+    </div>
+
+    <!-- MacBook mockup -->
+    <div class="hero-visual" aria-hidden="true">
+      <div class="macbook">
+        <div class="mac-lid">
+          <div class="mac-camera"></div>
+          <div class="mac-screen">
+            <img src="Kassa.png" alt="Интерфейс кассовой программы 46POS" />
+          </div>
+        </div>
+        <div class="mac-base"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FOR WHO ══════════════════════════ -->
+<section id="for-who" aria-labelledby="for-who-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Целевая аудитория</div>
+      <h2 id="for-who-heading" class="section-title">Подходит для любого магазина</h2>
+      <p class="section-sub">От небольшого мини-маркета до сети торговых точек — 46POS адаптируется под ваш бизнес</p>
+    </div>
+    <div class="who-grid" role="list">
+      <div class="who-card fade-up d1" role="listitem">
+        <div class="who-icon ic-green" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <div class="who-label">Мини-маркеты<br>и продукты</div>
+      </div>
+      <div class="who-card fade-up d2" role="listitem">
+        <div class="who-icon ic-violet" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.57a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8a2 2 0 0 0 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.57a2 2 0 0 0-1.34-2.23z"/></svg>
+        </div>
+        <div class="who-label">Одежда<br>и обувь</div>
+      </div>
+      <div class="who-card fade-up d3" role="listitem">
+        <div class="who-icon ic-rose" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        </div>
+        <div class="who-label">Аптеки<br>и косметика</div>
+      </div>
+      <div class="who-card fade-up d4" role="listitem">
+        <div class="who-icon ic-amber" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <div class="who-label">Хозяйственные<br>товары</div>
+      </div>
+      <div class="who-card fade-up d5" role="listitem">
+        <div class="who-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        </div>
+        <div class="who-label">Любая розничная<br>точка</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FEATURES ══════════════════════════ -->
+<section id="features" class="section" aria-labelledby="features-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Функционал</div>
+      <h2 id="features-heading" class="section-title">Всё что нужно для вашего бизнеса</h2>
+      <p class="section-sub">Полный набор инструментов для управления магазином в одном приложении</p>
+    </div>
+    <div class="feat-grid">
+      <!-- 1 -->
+      <article class="feat-card fade-up d1">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        </div>
+        <h3 class="feat-title">Быстрая касса</h3>
+        <p class="feat-desc">Оформляйте продажи за секунды. Поддержка штрихкодов, скидок, возвратов и нескольких способов оплаты.</p>
+      </article>
+      <!-- 2 -->
+      <article class="feat-card fade-up d2">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+        </div>
+        <h3 class="feat-title">Управление складом</h3>
+        <p class="feat-desc">Приход и расход товаров, накладные, контроль остатков, уведомления когда товар заканчивается.</p>
+      </article>
+      <!-- 3 -->
+      <article class="feat-card fade-up d3">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        </div>
+        <h3 class="feat-title">Финансовые отчёты</h3>
+        <p class="feat-desc">Выручка, прибыль, расходы, средний чек — всё по дням, неделям и месяцам. Экспорт в Excel.</p>
+      </article>
+      <!-- 4 -->
+      <article class="feat-card fade-up d4">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+        </div>
+        <h3 class="feat-title">Каталог товаров</h3>
+        <p class="feat-desc">Неограниченное количество товаров, категории, фото, штрихкоды, закупочные и розничные цены.</p>
+      </article>
+      <!-- 5 -->
+      <article class="feat-card fade-up d5">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3 class="feat-title">Накладные и партии</h3>
+        <p class="feat-desc">Полный учёт поставок, номера партий, сроки годности, автоматическое обновление остатков.</p>
+      </article>
+      <!-- 6 -->
+      <article class="feat-card fade-up d6">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        </div>
+        <h3 class="feat-title">Долги и кредиты</h3>
+        <p class="feat-desc">Ведите учёт покупателей в долг, отслеживайте задолженности и платежи.</p>
+      </article>
+      <!-- 7 -->
+      <article class="feat-card fade-up d1">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        </div>
+        <h3 class="feat-title">Несколько кассиров</h3>
+        <p class="feat-desc">Режим администратора и кассира. Каждый видит только то, что ему нужно.</p>
+      </article>
+      <!-- 9 -->
+      <article class="feat-card fade-up d3">
+        <div class="feat-icon-wrap" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+        </div>
+        <h3 class="feat-title">Резервные копии</h3>
+        <p class="feat-desc">Автоматическое резервное копирование базы данных. Ваши данные всегда в безопасности.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ ADVANTAGES ══════════════════════════ -->
+<section id="advantages" class="section" aria-labelledby="adv-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Почему мы</div>
+      <h2 id="adv-heading" class="section-title">Почему выбирают 46POS</h2>
+      <p class="section-sub">Мы сделали программу специально для предпринимателей Таджикистана</p>
+    </div>
+    <div class="adv-grid">
+      <article class="adv-card fade-up d1">
+        <div class="adv-icon-wrap ic-blue" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3 class="adv-title">Работает без интернета</h3>
+        <p class="adv-desc">Касса работает даже при отключении интернета. Данные хранятся на вашем компьютере.</p>
+      </article>
+      <article class="adv-card fade-up d2">
+        <div class="adv-icon-wrap ic-green" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </div>
+        <h3 class="adv-title">Запуск за 1 день</h3>
+        <p class="adv-desc">Установим программу, загрузим ваши товары и обучим кассира за один рабочий день.</p>
+      </article>
+      <article class="adv-card fade-up d3">
+        <div class="adv-icon-wrap ic-amber" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        </div>
+        <h3 class="adv-title">Доступная цена</h3>
+        <p class="adv-desc">Фиксированная стоимость лицензии без ежемесячной подписки. Платите один раз.</p>
+      </article>
+      <article class="adv-card fade-up d4">
+        <div class="adv-icon-wrap ic-purple" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <h3 class="adv-title">Защита данных</h3>
+        <p class="adv-desc">Лицензия привязана к вашему оборудованию. Никто посторонний не получит доступ.</p>
+      </article>
+      <article class="adv-card fade-up d5">
+        <div class="adv-icon-wrap ic-indigo" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+        </div>
+        <h3 class="adv-title">Демо в браузере</h3>
+        <p class="adv-desc">Попробуйте программу прямо сейчас в браузере без установки и регистрации.</p>
+      </article>
+      <article class="adv-card fade-up d6">
+        <div class="adv-icon-wrap ic-teal" aria-hidden="true">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <h3 class="adv-title">Поддержка на таджикском</h3>
+        <p class="adv-desc">Отвечаем на таджикском, русском и узбекском. На связи с 9:00 до 22:00.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ HOW TO START ══════════════════════════ -->
+<section id="how" class="section" aria-labelledby="how-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Начало работы</div>
+      <h2 id="how-heading" class="section-title">Запустите автоматизацию за 4 шага</h2>
+      <p class="section-sub">Просто свяжитесь с нами — остальное сделаем мы</p>
+    </div>
+    <div class="steps-wrapper">
+      <div class="steps-line" aria-hidden="true"></div>
+      <div class="steps-grid">
+        <div class="step fade-up d1">
+          <div class="step-num" aria-hidden="true">01</div>
+          <h3 class="step-title">Свяжитесь с нами</h3>
+          <p class="step-desc">Напишите в Telegram или WhatsApp. Расскажите о вашем магазине и количестве товаров.</p>
+        </div>
+        <div class="step fade-up d2">
+          <div class="step-num" aria-hidden="true">02</div>
+          <h3 class="step-title">Установим и настроим</h3>
+          <p class="step-desc">Приедем или поможем удалённо. Загрузим ваши товары, настроим кассу и обучим кассира.</p>
+        </div>
+        <div class="step fade-up d3">
+          <div class="step-num" aria-hidden="true">03</div>
+          <h3 class="step-title">Обучим персонал</h3>
+          <p class="step-desc">Покажем как пользоваться кассой, складом и отчётами. Вы и ваши сотрудники будете уверенно работать с первого дня.</p>
+        </div>
+        <div class="step fade-up d4">
+          <div class="step-num" aria-hidden="true">04</div>
+          <h3 class="step-title">Работайте и зарабатывайте</h3>
+          <p class="step-desc">Кассир начинает работу в тот же день. Вы контролируете всё из отчётов.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ PRICING ══════════════════════════ -->
+<section id="pricing" class="section" aria-labelledby="pricing-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Тарифы</div>
+      <h2 id="pricing-heading" class="section-title">Простые и честные цены</h2>
+      <p class="section-sub">Без скрытых платежей и ежемесячных подписок. Заплатите один раз — пользуйтесь всегда.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Базовый -->
+      <div class="price-card fade-up d1">
+        <div class="price-tier">Базовый</div>
+        <div class="price-name">Базовый</div>
+        <div class="price-seats">Для 1 кассы</div>
+        <ul class="price-list" aria-label="Включено в тариф Базовый">
+          <li>Касса и продажи</li>
+          <li>Товары без ограничений</li>
+          <li>Отчёты и склад</li>
+          <li>Установка включена</li>
+        </ul>
+        <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="btn btn-secondary price-cta" aria-label="Купить тариф Базовый — написать в Telegram">Написать в Telegram / WhatsApp</a>
+        <p class="price-note">Уточните стоимость</p>
+      </div>
+      <!-- Стандарт -->
+      <div class="price-card featured fade-up d2">
+        <div class="featured-tag" aria-label="Популярный тариф">⭐ Популярный</div>
+        <div class="price-tier">Стандарт</div>
+        <div class="price-name">Стандарт</div>
+        <div class="price-seats">Для 1–3 касс</div>
+        <ul class="price-list" aria-label="Включено в тариф Стандарт">
+          <li>Всё из тарифа Базовый</li>
+          <li>Несколько кассиров</li>
+          <li>Накладные и партии</li>
+          <li>Поддержка 6 месяцев</li>
+        </ul>
+        <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="btn btn-primary price-cta" aria-label="Купить тариф Стандарт — написать в Telegram">Написать в Telegram / WhatsApp</a>
+        <p class="price-note">Уточните стоимость</p>
+      </div>
+      <!-- Бизнес -->
+      <div class="price-card fade-up d3">
+        <div class="price-tier">Бизнес</div>
+        <div class="price-name">Бизнес</div>
+        <div class="price-seats">Для сети магазинов</div>
+        <ul class="price-list" aria-label="Включено в тариф Бизнес">
+          <li>Всё из тарифа Стандарт</li>
+          <li>Несколько точек</li>
+          <li>Приоритетная поддержка</li>
+          <li>Обучение персонала</li>
+        </ul>
+        <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="btn btn-secondary price-cta" aria-label="Купить тариф Бизнес — написать в Telegram">Написать в Telegram / WhatsApp</a>
+        <p class="price-note">Уточните стоимость</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ DEMO BANNER ══════════════════════════ -->
+<section id="demo-banner" aria-label="Попробовать демо">
+  <div class="demo-inner">
+    <div class="demo-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+    </div>
+    <h2 class="demo-title">Попробуйте 46POS прямо сейчас</h2>
+    <p class="demo-sub">Веб-демо работает в браузере без установки и регистрации</p>
+    <a href="https://46posdemo.netlify.app/" class="demo-cta" aria-label="Открыть веб-демо 46POS">
+      Открыть демо 46POS
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FAQ ══════════════════════════ -->
+<section id="faq" class="section" aria-labelledby="faq-heading">
+  <div class="container">
+    <div class="text-center fade-up">
+      <div class="tag">Вопросы и ответы</div>
+      <h2 id="faq-heading" class="section-title">Часто задаваемые вопросы</h2>
+      <p class="section-sub">Не нашли ответ? Напишите в Telegram — ответим в течение часа.</p>
+    </div>
+    <div class="faq-wrap fade-up">
+      <div class="faq-item" role="region" aria-label="Нужен ли интернет для работы кассы?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Нужен ли интернет для работы кассы?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Нет. Десктоп-версия работает полностью офлайн. Интернет нужен только для первоначальной установки и получения обновлений.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="На каком оборудовании работает?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          На каком оборудовании работает?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">На любом компьютере или ноутбуке с Windows 10/11. Также доступна веб-версия в браузере (Chrome, Firefox, Edge) без каких-либо требований к операционной системе.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Сколько товаров можно добавить?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Сколько товаров можно добавить?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Без ограничений. Система работает быстро даже с 50 000+ товарами. Поддерживается импорт из CSV/Excel.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Поддерживаются ли штрихкод-сканеры?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Поддерживаются ли штрихкод-сканеры?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Да, любые USB-сканеры штрихкодов работают без дополнительных настроек. Также можно вводить штрихкоды вручную или использовать камеру устройства.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Можно ли вести учёт нескольких магазинов?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Можно ли вести учёт нескольких магазинов?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Да, в тарифе Бизнес доступно управление несколькими торговыми точками с единым каталогом и раздельными отчётами.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Как часто выходят обновления?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Как часто выходят обновления?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Регулярно. Все обновления для действующих лицензий бесплатны. Мы добавляем новые функции и улучшаем существующие на основе отзывов пользователей.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Можно ли перенести товары из Excel?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Можно ли перенести товары из Excel?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Да, поддерживается импорт товаров из CSV/Excel. Просто подготовьте файл по шаблону — и мы загрузим все ваши товары за несколько минут.</div>
+      </div>
+      <div class="faq-item" role="region" aria-label="Что будет с данными если сломается компьютер?">
+        <div class="faq-q" role="button" tabindex="0" aria-expanded="false">
+          Что будет с данными если сломается компьютер?
+          <div class="faq-toggle" aria-hidden="true"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></div>
+        </div>
+        <div class="faq-a" role="region">Система делает автоматические резервные копии. В случае поломки оборудования мы восстановим все данные на новом компьютере без потерь.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ CONTACTS ══════════════════════════ -->
+<section id="contacts" class="section" aria-labelledby="contacts-heading">
+  <div class="container">
+    <div class="cta-box fade-up">
+      <div class="cta-inner">
+        <h2 id="contacts-heading" class="cta-title">Готовы автоматизировать ваш магазин?</h2>
+        <p class="cta-sub">Свяжитесь с нами — ответим в течение 1 часа и поможем выбрать подходящий тариф</p>
+        <div class="cta-grid">
+          <a href="https://t.me/shirinshosh" target="_blank" rel="noopener" class="cta-btn" aria-label="Написать в Telegram / WhatsApp @shirinshosh">
+            <div class="cta-btn-icon ic-blue" aria-hidden="true">
+              <svg viewBox="0 0 24 24" stroke="var(--accent-l)"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+            </div>
+            <div class="cta-btn-body">
+              <div class="cta-btn-lbl">Telegram</div>
+              <div class="cta-btn-val">@shirinshosh</div>
+            </div>
+          </a>
+          <a href="https://wa.me/77072442497" target="_blank" rel="noopener" class="cta-btn" aria-label="Написать в WhatsApp">
+            <div class="cta-btn-icon ic-green" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            </div>
+            <div class="cta-btn-body">
+              <div class="cta-btn-lbl">WhatsApp</div>
+              <div class="cta-btn-val">+7 707 244 24 97</div>
+            </div>
+          </a>
+          <a href="https://46posdemo.netlify.app/" class="cta-btn" aria-label="Открыть веб-демо 46POS">
+            <div class="cta-btn-icon ic-indigo" aria-hidden="true">
+              <svg viewBox="0 0 24 24" stroke="#818CF8"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            </div>
+            <div class="cta-btn-body">
+              <div class="cta-btn-lbl">Веб-демо</div>
+              <div class="cta-btn-val">Открыть 46POS →</div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ FOOTER ══════════════════════════ -->
+<footer role="contentinfo">
+  <div class="footer-inner">
+    <a href="#" class="footer-logo" aria-label="46POS — главная">46<span>POS</span></a>
+    <span class="footer-copy">© 2025 46POS — Система автоматизации торговли</span>
+    <nav class="footer-links" aria-label="Ссылки в подвале">
+      <a href="https://46posdemo.netlify.app/">Демо</a>
+      <a href="#contacts">Контакты</a>
+      <a href="#">Конфиденциальность</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- SEO keywords -->
+<div style="position:absolute;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none;" aria-hidden="true">
+  касса для магазина Таджикистан, программа учёта товаров Таджикистан, автоматизация торговли Душанбе, кассовая программа Душанбе, касса Худжанд, POS система Таджикистан, программа для розничного магазина Таджикистан, касса Куляб, касса Бохтар, учёт склада Таджикистан, 46POS Таджикистан, автоматизация магазина Душанбе
+</div>
+
+<script>
+  // ── Navbar scroll shadow ──
+  const nav = document.getElementById('navbar');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 24);
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  // ── Mobile hamburger ──
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', isOpen);
+    hamburger.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
+  });
+
+  mobileMenu.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+      hamburger.setAttribute('aria-expanded', 'false');
+      hamburger.setAttribute('aria-label', 'Открыть меню');
+    });
+  });
+
+  // ── FAQ accordion ──
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    const toggle = () => {
+      const item = btn.parentElement;
+      const isOpen = item.classList.contains('open');
+      // Close all
+      document.querySelectorAll('.faq-item.open').forEach(el => {
+        el.classList.remove('open');
+        el.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      // Open current
+      if (!isOpen) {
+        item.classList.add('open');
+        btn.setAttribute('aria-expanded', 'true');
+      }
+    };
+
+    btn.addEventListener('click', toggle);
+    btn.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
+    });
+  });
+
+  // ── Intersection Observer for fade-up ──
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -48px 0px' });
+
+  document.querySelectorAll('.fade-up').forEach(el => io.observe(el));
+
+  // ── Smooth scroll for anchor links ──
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', e => {
+      const id = link.getAttribute('href');
+      if (id === '#') return;
+      const target = document.querySelector(id);
+      if (!target) return;
+      e.preventDefault();
+      window.scrollTo({ top: target.offsetTop - 76, behavior: 'smooth' });
+      // Close mobile menu if open
+      mobileMenu.classList.remove('open');
+      hamburger.classList.remove('open');
+    });
+  });
+</script>
+</body>
+</html>
